@@ -26,7 +26,11 @@ export default function DrawerLeft(props) {
     >
       <List>
       
+<<<<<<< Updated upstream
         {[{text: 'Inbox', key: 'inbox'}, {text: 'Home', key: './'}, {text: 'Purchase NFT', key: './store'}, {text: 'My Waifu', key: './collection'}].map((obj, index) => (
+=======
+        {[{text: 'Inbox', key: 'inbox'}, {text: 'Home', key: './'}, {text: 'Purchase NFT', key: './store'}, {text: 'My Waifu', key: './collection'}, {text: 'Matchmake', key: './matchmake'}, {text: 'Vote', key: './voting'}, {text: 'My Profile', key: './profile'}].map((obj, index) => (
+>>>>>>> Stashed changes
            <Link href={`/${obj.key}`}>
                 <ListItem key={obj.text} disablePadding sx={{marginTop: 1}}>
                     <ListItemButton>

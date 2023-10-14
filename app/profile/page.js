@@ -5,7 +5,7 @@ export default function StorePage () {
     return (
         <>
             <Container maxWidth="lg" sx={{marginTop: 3}}>
-                <PageTitle title='Store' />
+                <PageTitle title='My Profile' />
             </Container>
         </>
     )

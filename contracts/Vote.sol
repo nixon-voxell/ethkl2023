@@ -17,6 +17,7 @@ contract Vote {
     Voters voters;
     Players players;
     uint8 voterCount = 0;
+    uint8 playerCount = 0;
     uint256[] totalVoteCounts = new uint256[](WAIFU_COUNT);
     uint256[] totalBetAmounts = new uint256[](WAIFU_COUNT);
 
@@ -25,6 +26,15 @@ contract Vote {
         players = Players(new address[](WAIFU_COUNT), new uint256[](WAIFU_COUNT));
     }
 
+    function addPlayer()
+        public payable
+    {
+       
+        players.adds[playerCount] = msg.sender;
+        players.betAmounts[playerCount] = msg.value;
+        playerCount += 1;
+
+    }
     /**
      * @dev Add voter to the contract.
      */
@@ -36,6 +46,7 @@ contract Vote {
         if (voterCount >= MAX_VOTER_COUNT) return false;
         // waifulIndex can only be 0 and 1
         if (waifuIndex != 0 && waifuIndex != 1) return false;
+        if (players.adds[0] == address(0) || players.adds[1] == address(0)) return false;
 
         // Set voter data into a new slot
         voters.adds[voterCount] = msg.sender;
@@ -113,6 +124,7 @@ contract Vote {
      */
     function resetGame() internal {
         voterCount = 0;
+        playerCount = 0;
 
         for (uint v = 0; v < MAX_VOTER_COUNT; v++) {
             voters.adds[v] = address(0);

@@ -22,31 +22,33 @@ contract Vote {
     uint256[] totalBetAmounts = new uint256[](WAIFU_COUNT);
 
     constructor() {
-        voters = Voters(new address[](MAX_VOTER_COUNT), new uint256[](MAX_VOTER_COUNT), new uint64[](MAX_VOTER_COUNT));
-        players = Players(new address[](WAIFU_COUNT), new uint256[](WAIFU_COUNT));
+        voters = Voters(
+            new address[](MAX_VOTER_COUNT),
+            new uint256[](MAX_VOTER_COUNT),
+            new uint64[](MAX_VOTER_COUNT)
+        );
+        players = Players(
+            new address[](WAIFU_COUNT),
+            new uint256[](WAIFU_COUNT)
+        );
     }
 
-    function addPlayer()
-        public payable
-    {
-       
+    function addPlayer() public payable {
         players.adds[playerCount] = msg.sender;
         players.betAmounts[playerCount] = msg.value;
         playerCount += 1;
-
     }
+
     /**
      * @dev Add voter to the contract.
      */
-    function addVoter(uint64 waifuIndex)
-        public payable
-        returns (bool)
-    {
+    function addVoter(uint64 waifuIndex) public payable returns (bool) {
         if (msg.value < BET_MIN_THRESHOLD) return false;
         if (voterCount >= MAX_VOTER_COUNT) return false;
         // waifulIndex can only be 0 and 1
         if (waifuIndex != 0 && waifuIndex != 1) return false;
-        if (players.adds[0] == address(0) || players.adds[1] == address(0)) return false;
+        if (players.adds[0] == address(0) || players.adds[1] == address(0))
+            return false;
 
         // Set voter data into a new slot
         voters.adds[voterCount] = msg.sender;
@@ -60,7 +62,10 @@ contract Vote {
 
         console.log("Betting on Waifu #", waifuIndex);
         console.log("Bet amount:", msg.value);
-        console.log("Waifu now has total count of:", totalVoteCounts[waifuIndex]);
+        console.log(
+            "Waifu now has total count of:",
+            totalVoteCounts[waifuIndex]
+        );
         console.log("Waifu now has total bet of:", totalBetAmounts[waifuIndex]);
 
         if (voterCount >= MAX_VOTER_COUNT) {
@@ -102,11 +107,15 @@ contract Vote {
         for (uint v = 0; v < voters.adds.length; v++) {
             uint256 winAmount;
             if (voters.waifuIndices[v] == winnerWaifuIndex) {
-                winAmount = (voters.betAmounts[v] * loserTotalBetAmount) / winnerTotalBetAmount;
+                winAmount =
+                    (voters.betAmounts[v] * loserTotalBetAmount) /
+                    winnerTotalBetAmount;
 
                 console.log("Winner: ", winAmount);
                 console.log("Bet amount:", voters.betAmounts[v]);
-                payable(voters.adds[v]).transfer(winAmount + voters.betAmounts[v]);
+                payable(voters.adds[v]).transfer(
+                    winAmount + voters.betAmounts[v]
+                );
             } else {
                 winAmount = 0;
                 console.log("Loser: ", winAmount);
@@ -116,7 +125,9 @@ contract Vote {
         // This only works if there is only 2 waifus/players
         // TODO: support this for more than 2 waifus/players
         uint loserWaifuIndex = winnerWaifuIndex == 0 ? 1 : 0;
-        payable(players.adds[winnerWaifuIndex]).transfer(players.betAmounts[loserWaifuIndex]);
+        payable(players.adds[winnerWaifuIndex]).transfer(
+            players.betAmounts[loserWaifuIndex]
+        );
     }
 
     /**

@@ -13,6 +13,9 @@ import Modal from "@mui/material/Modal";
 import { Divider, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import TextField from "@mui/material/TextField";
+// import { abi } from "@/components/Abi/abi";
+import { abi } from "@/components/Abi/v";
+import { ethers } from "ethers";
 
 const style = {
   position: "absolute",
@@ -32,6 +35,31 @@ export default function StorePage() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  async function onVote() {
+    console.log("Voted");
+
+
+    const contractAddress = "0xC270a139FC34CE78dD753e3a753DC238c75CD781";
+
+    const wallet = new ethers.BrowserProvider(window.ethereum); // Referring to metamask
+    const block = await wallet.getBlockNumber();
+
+    // console.log(block)
+
+    // Get connected address
+    const address = await wallet.getSigner();
+
+    // get the smart contract
+    const contract = new ethers.Contract(
+      contractAddress,
+      abi,
+      address
+    );
+
+    contract.addVoter(1)
+    // console.log(contract)
+  }
+
   return (
     <>
       <Container maxWidth="lg" sx={{ marginTop: 3 }}>
@@ -41,14 +69,18 @@ export default function StorePage() {
         <Box
           component="form"
           sx={{
-            "& > :not(style)": { m: 1, width: "25ch",  marginTop: 2 },
+            "& > :not(style)": { m: 1, width: "25ch", marginTop: 2 },
           }}
           noValidate
           autoComplete="off"
         >
-          <TextField id="outlined-basic" label="Bet Amount" variant="outlined" />
+          <TextField
+            id="outlined-basic"
+            label="Bet Amount"
+            variant="outlined"
+          />
         </Box>
-        <Button variant="contained" sx={{ marginTop: 2 }} onClick={handleOpen}>
+        <Button variant="contained" sx={{ marginTop: 2 }} onClick={onVote}>
           Enter Voting Pool
         </Button>
         <Modal
